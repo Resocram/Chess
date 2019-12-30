@@ -1,15 +1,20 @@
-import javax.imageio.ImageIO;
+package GUI;
+
+import Pieces.Pawn;
+import Pieces.Piece;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 public class GUI {
     private JButton[][] grid;
+    private Object[][] piece;
     private JFrame frame;
 
     public GUI() {
+        this.piece = new Object[8][8];
         this.grid = new JButton[8][8];
         this.frame = new JFrame("Chess");
     }
