@@ -28,5 +28,9 @@ public class Pawn extends Piece {
         } else return this.player.getID() == 1 && this.x == 1;
     }
 
+    public String toString(){
+        return "pawn";
+    }
+
 
 }

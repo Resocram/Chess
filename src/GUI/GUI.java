@@ -2,6 +2,7 @@ package GUI;
 
 import Pieces.Pawn;
 import Pieces.Piece;
+import javafx.util.Pair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,11 +13,20 @@ public class GUI {
     private JButton[][] grid;
     private Object[][] piece;
     private JFrame frame;
+    private Player player1; //White
+    private Player player2; //Black
+    private Player turn;
+    private int[][] moveQueue;
 
     public GUI() {
         this.piece = new Object[8][8];
         this.grid = new JButton[8][8];
         this.frame = new JFrame("Chess");
+        this.player1 = new Player(0);
+        this.player2 = new Player(1);
+        this.turn = player1;
+        this.moveQueue = new int[2][2];
+
     }
 
     public void setSize(int x, int y) {
@@ -89,6 +99,7 @@ public class GUI {
     private void setKnights(){
         ImageIcon blackKnight = new ImageIcon("./local/Black Knight.png");
         ImageIcon whiteKnight = new ImageIcon("./local/White Knight.png");
+
         grid[0][1].setIcon(blackKnight);
         grid[0][6].setIcon(blackKnight);
         grid[7][1].setIcon(whiteKnight);
@@ -99,9 +110,17 @@ public class GUI {
         ImageIcon blackPawn = new ImageIcon("./local/Black Pawn.png");
         ImageIcon whitePawn = new ImageIcon("./local/White Pawn.png");
         for(int i =0; i<8;i++){
+            piece[1][i] = new Pawn(1,i,player2);
+            piece[6][i] = new Pawn(6,i,player1);
             grid[1][i].setIcon(blackPawn);
             grid[6][i].setIcon(whitePawn);
         }
+    }
+
+    private void performAction(int clickedI, int clickedJ){
+        Object object = piece[clickedI][clickedJ];
+
+
     }
 
     private class ButtonHandler implements ActionListener {
@@ -111,7 +130,8 @@ public class GUI {
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     if (source == grid[i][j]) {
-                        System.out.println(i + "" + j);
+                        performAction(i,j);
+                        System.out.println(i + "" + j + piece[i][j]);
                         return;
                     }
                 }
