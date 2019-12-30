@@ -2,8 +2,8 @@ package Pieces;
 import GUI.Player;
 
 public abstract class Piece {
-    public int x;
-    public int y;
+    int x;
+    int y;
     Player player;
 
 
@@ -14,5 +14,9 @@ public abstract class Piece {
     }
 
     public abstract boolean validMove(int finalX, int finalY);
+
+    public Player player() {
+        return this.player;
+    }
 
 }

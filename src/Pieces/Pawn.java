@@ -4,10 +4,6 @@ import GUI.Player;
 
 public class Pawn extends Piece {
 
-    private String id;
-    private int x;
-    private int y;
-
     public Pawn(int x, int y, Player player) {
         super(x, y, player);
     }
