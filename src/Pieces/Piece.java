@@ -4,7 +4,7 @@ import GUI.Player;
 public abstract class Piece {
     int x;
     int y;
-    Player player;
+    public Player player;
 
 
     public Piece(int x, int y, Player player) {
@@ -13,10 +13,12 @@ public abstract class Piece {
         this.player= player;
     }
 
-    public abstract boolean validMove(int finalX, int finalY);
+    public abstract boolean validMove(int finalX, int finalY, Object[][] pieces);
 
-    public Player player() {
-        return this.player;
-    }
+
+
+    public abstract String toString();
+
+
 
 }

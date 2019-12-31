@@ -1,7 +1,9 @@
 package GUI;
 
+import Pieces.Knight;
 import Pieces.Pawn;
 import Pieces.Piece;
+import Pieces.Rook;
 
 
 import javax.swing.*;
@@ -66,21 +68,21 @@ public class GUI {
 
     }
 
-    private void setKings(){
+    private void setKings() {
         ImageIcon blackKing = new ImageIcon("./local/Black King.png");
         ImageIcon whiteKing = new ImageIcon("./local/White King.png");
         grid[0][4].setIcon(blackKing);
         grid[7][4].setIcon(whiteKing);
     }
 
-    private void setQueens(){
+    private void setQueens() {
         ImageIcon blackQueen = new ImageIcon("./local/Black Queen.png");
         ImageIcon whiteQueen = new ImageIcon("./local/White Queen.png");
         grid[0][3].setIcon(blackQueen);
         grid[7][3].setIcon(whiteQueen);
     }
 
-    private void setBishops(){
+    private void setBishops() {
         ImageIcon blackBishop = new ImageIcon("./local/Black Bishop.png");
         ImageIcon whiteBishop = new ImageIcon("./local/White Bishop.png");
         grid[0][2].setIcon(blackBishop);
@@ -88,9 +90,14 @@ public class GUI {
         grid[7][2].setIcon(whiteBishop);
         grid[7][5].setIcon(whiteBishop);
     }
-    private void setRooks(){
+
+    private void setRooks() {
         ImageIcon blackRook = new ImageIcon("./local/Black Rook.png");
         ImageIcon whiteRook = new ImageIcon("./local/White Rook.png");
+        pieces[0][0] = new Rook(0,0,player2);
+        pieces[0][7] = new Rook(0,7,player2);
+        pieces[7][0] = new Rook(7,0,player1);
+        pieces[7][7] = new Rook(7,7,player1);
         grid[0][0].setIcon(blackRook);
         grid[0][7].setIcon(blackRook);
         grid[7][0].setIcon(whiteRook);
@@ -98,10 +105,13 @@ public class GUI {
 
     }
 
-    private void setKnights(){
+    private void setKnights() {
         ImageIcon blackKnight = new ImageIcon("./local/Black Knight.png");
         ImageIcon whiteKnight = new ImageIcon("./local/White Knight.png");
-
+        pieces[0][1] = new Knight(0,1,player2);
+        pieces[0][6] = new Knight(0,6,player2);
+        pieces[7][1] = new Knight(7,1,player1);
+        pieces[7][6] = new Knight(7,6,player1);
         grid[0][1].setIcon(blackKnight);
         grid[0][6].setIcon(blackKnight);
         grid[7][1].setIcon(whiteKnight);
@@ -111,60 +121,101 @@ public class GUI {
     private void setPawns() {
         ImageIcon blackPawn = new ImageIcon("./local/Black Pawn.png");
         ImageIcon whitePawn = new ImageIcon("./local/White Pawn.png");
-        for(int i =0; i<8;i++){
-            pieces[1][i] = new Pawn(1,i,player2);
-            pieces[6][i] = new Pawn(6,i,player1);
+        for (int i = 0; i < 8; i++) {
+            pieces[1][i] = new Pawn(1, i, player2);
+            pieces[6][i] = new Pawn(6, i, player1);
             grid[1][i].setIcon(blackPawn);
             grid[6][i].setIcon(whitePawn);
         }
     }
 
-    private void performAction(int clickedI, int clickedJ){
+    private void performAction(int clickedI, int clickedJ) {
         //No clicked piece
-        if(noMovedQueued()){
-            if(checkIfPiece(clickedI,clickedJ)){
-                moveQueue[0] = clickedI;
-                moveQueue[1] = clickedJ;
+        if (noMovedQueued()) {
+            Piece toMove = getPiece(clickedI, clickedJ);
+            if (!(toMove == null)) {
+                if (checkIfPlayersPiece(toMove)) {
+                    moveQueue[0] = clickedI;
+                    moveQueue[1] = clickedJ;
+                }
             }
-        }
-        else{
+        } else {
             Piece piece = (Piece) pieces[moveQueue[0]][moveQueue[1]];
-            if(piece.validMove(clickedI,clickedJ)){
+
+            if (piece.validMove(clickedI, clickedJ, pieces)) {
                 movePiece(clickedI, clickedJ);
                 switchPlayer();
+                moveQueue[0] = -1;
+                moveQueue[1] = -1;
             }
-        }
+            else {
+                Piece toMove = getPiece(clickedI, clickedJ);
+                if (!(toMove == null)) {
+                    if (checkIfPlayersPiece(toMove)) {
+                        moveQueue[0] = clickedI;
+                        moveQueue[1] = clickedJ;
+                    }
+                }
+                }
+            }
+
+
 
     }
 
-    private void switchPlayer(){
-        if(this.turn.equals(player1)){
+    private Piece getPiece(int clickedI, int clickedJ) {
+        return (Piece) pieces[clickedI][clickedJ];
+    }
+
+    private void switchPlayer() {
+        if (this.turn.equals(player1)) {
             this.turn = player2;
-        }
-        else{
+        } else {
             this.turn = player1;
         }
     }
-    private void movePiece(int clickedI, int clickedJ){
+
+    private void movePiece(int clickedI, int clickedJ) {
         grid[moveQueue[0]][moveQueue[1]].setIcon(new ImageIcon("./local/Blank.png"));
-        grid[clickedI][clickedJ].setIcon(new ImageIcon("./local/White Pawn.png"));
-        pieces[clickedI][clickedJ] = new Pawn(clickedI,clickedJ,this.turn);
+
+
+        Piece piece = getPiece(moveQueue[0], moveQueue[1]);
+        if(piece instanceof Pawn){
+            if(this.turn.getID()==0) {
+                grid[clickedI][clickedJ].setIcon(new ImageIcon("./local/White Pawn.png"));
+            }else{
+                grid[clickedI][clickedJ].setIcon(new ImageIcon("./local/Black Pawn.png"));
+            }
+            pieces[clickedI][clickedJ] = new Pawn(clickedI, clickedJ, this.turn);
+        }
+        else if(piece instanceof Knight){
+            if(this.turn.getID()==0) {
+                grid[clickedI][clickedJ].setIcon(new ImageIcon("./local/White Knight.png"));
+            }else{
+                grid[clickedI][clickedJ].setIcon(new ImageIcon("./local/Black Knight.png"));
+            }
+            pieces[clickedI][clickedJ] = new Knight(clickedI, clickedJ, this.turn);
+        }
+        else if (piece instanceof Rook){
+            if(this.turn.getID()==0) {
+                grid[clickedI][clickedJ].setIcon(new ImageIcon("./local/White Rook.png"));
+            }else{
+                grid[clickedI][clickedJ].setIcon(new ImageIcon("./local/Black Rook.png"));
+            }
+            pieces[clickedI][clickedJ] = new Rook(clickedI, clickedJ, this.turn);
+        }
+
         pieces[moveQueue[0]][moveQueue[1]] = null;
 
 
     }
 
-    private boolean noMovedQueued(){
+    private boolean noMovedQueued() {
         return moveQueue[0] == -1 && moveQueue[1] == -1;
     }
 
-    private boolean checkIfPiece(int clickedI, int clickedJ){
-        Piece clicked = (Piece) pieces[clickedI][clickedJ];
-        if(clicked == null){
-            return false;
-        }else{
-            return clicked.player().equals(this.turn);
-        }
+    private boolean checkIfPlayersPiece(Piece piece) {
+        return piece.player.equals(this.turn);
     }
 
     private class ButtonHandler implements ActionListener {
@@ -174,7 +225,7 @@ public class GUI {
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     if (source == grid[i][j]) {
-                        performAction(i,j);
+                        performAction(i, j);
                         System.out.println(i + "" + j + pieces[i][j]);
                         return;
                     }
