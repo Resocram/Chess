@@ -1,9 +1,6 @@
 package GUI;
 
-import Pieces.Knight;
-import Pieces.Pawn;
-import Pieces.Piece;
-import Pieces.Rook;
+import Pieces.*;
 
 
 import javax.swing.*;
@@ -85,6 +82,10 @@ public class GUI {
     private void setBishops() {
         ImageIcon blackBishop = new ImageIcon("./local/Black Bishop.png");
         ImageIcon whiteBishop = new ImageIcon("./local/White Bishop.png");
+        pieces[0][2] = new Bishop(0,2,player2);
+        pieces[0][5] = new Bishop(0,5,player2);
+        pieces[7][2] = new Bishop(7,2,player1);
+        pieces[7][5] = new Bishop(7,5,player1);
         grid[0][2].setIcon(blackBishop);
         grid[0][5].setIcon(blackBishop);
         grid[7][2].setIcon(whiteBishop);
@@ -203,6 +204,14 @@ public class GUI {
                 grid[clickedI][clickedJ].setIcon(new ImageIcon("./local/Black Rook.png"));
             }
             pieces[clickedI][clickedJ] = new Rook(clickedI, clickedJ, this.turn);
+        }
+        else if (piece instanceof Bishop){
+            if(this.turn.getID()==0) {
+                grid[clickedI][clickedJ].setIcon(new ImageIcon("./local/White Bishop.png"));
+            }else{
+                grid[clickedI][clickedJ].setIcon(new ImageIcon("./local/Black Bishop.png"));
+            }
+            pieces[clickedI][clickedJ] = new Bishop(clickedI, clickedJ, this.turn);
         }
 
         pieces[moveQueue[0]][moveQueue[1]] = null;
