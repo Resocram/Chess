@@ -9,11 +9,24 @@ public class King extends Piece {
 
     @Override
     public boolean validMove(int finalX, int finalY, Object[][] pieces) {
-        return false;
+        Piece toMove = (Piece) pieces[finalX][finalY];
+        int distanceX = Math.abs(finalX - this.x);
+        int distanceY = Math.abs(finalY - this.y);
+        if(distanceX<=1 && distanceY<=1 && !(distanceX==0 && distanceY==0)){
+            if (toMove == null) {
+                return true;
+            } else {
+                return !(toMove.player.equals(this.player));
+            }
+        }
+        else{
+            return false;
+        }
+
     }
 
     @Override
     public String toString() {
-        return null;
+        return "king";
     }
 }
